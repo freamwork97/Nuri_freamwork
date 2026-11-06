@@ -57,7 +57,9 @@ const { cleanUploads } = require('./src/attachments');
 const { applyAutostart, startedByAutostart } = require('./src/autostart');
 const { createUiDialog } = require('./src/ui-dialog');
 
-const BUNDLED_BROWSER = path.join(config.ROOT, 'vendor', 'chrome-win64', 'chrome.exe');
+const { bundledBrowser, macPath } = require('./src/platform');
+if (process.platform === 'darwin') process.env.PATH = macPath(process.env.PATH);
+const BUNDLED_BROWSER = bundledBrowser(config.ROOT);
 
 let win = null; // classic window (builtin engine only)
 let host = null; // { engine, tabs, bridge } in Nuri mode
@@ -74,7 +76,7 @@ async function start() {
     e.returnValue = i18n.getLang();
   });
   settings.on('change', (changed) => 'appearance.language' in changed && applyLang());
-  const browserMode = settings.get('general.browserEngine') !== 'builtin' && fs.existsSync(BUNDLED_BROWSER);
+  const browserMode = settings.get('general.browserEngine') !== 'builtin' && BUNDLED_BROWSER && (BUNDLED_BROWSER && fs.existsSync(BUNDLED_BROWSER));
   const router = makeRouter(ipcMain);
   let bridgeServer = null;
   let uiFocused = false; // side panel focus (reported by the panel)
@@ -115,8 +117,8 @@ async function start() {
     if (input.type !== 'keyDown') return;
     const wc = tabs.activeWebContents();
     const key = input.key.toLowerCase();
-    if (input.control && key === 't') tabs.create(undefined, true);
-    else if (input.control && key === 'w') tabs.close(tabs.activeId);
+    if ((process.platform === 'darwin' ? input.meta : input.control) && key === 't') tabs.create(undefined, true);
+    else if ((process.platform === 'darwin' ? input.meta : input.control) && key === 'w') tabs.close(tabs.activeId);
     else if (input.key === 'F5') wc?.reload();
     else if (input.key === 'F12') wc?.openDevTools?.({ mode: 'detach' });
     else if (input.alt && input.key === 'ArrowLeft' && wc?.navigationHistory.canGoBack()) wc.navigationHistory.goBack();
@@ -183,7 +185,7 @@ async function start() {
     tabs = new TabManager(win, { onShortcut: handleShortcut, settings });
     tabs.on('closed', (wc) => bridge.forget(wc.id));
     // Google sign-in: done in a small window of the bundled Chromium, then imported (google-login.js).
-    googleLogin = fs.existsSync(BUNDLED_BROWSER) ? new GoogleLogin({ exe: BUNDLED_BROWSER, profileDir: profileDirFor(app.getPath('userData')), log }) : null;
+    googleLogin = (BUNDLED_BROWSER && fs.existsSync(BUNDLED_BROWSER)) ? new GoogleLogin({ exe: BUNDLED_BROWSER, profileDir: profileDirFor(app.getPath('userData')), log }) : null;
     // A tab wanted Google's sign-in: the agent panel shows a "Google 로그인" card; its button runs this.
     let loginWanted = null; // { tabId, url } of the last tab that needed it
     const signInGoogle = async (info = loginWanted || { tabId: tabs.activeId }) => {
@@ -226,7 +228,7 @@ async function start() {
     router.on('browser:openChromium', (_e, url) => {
       if (/^https:\/\//i.test(String(url))) agent.googleBrowser?.openPage(String(url)).catch((e) => log('open in chromium failed', e.message));
     });
-    engineInfo = { type: 'builtin', name: t('내장 브라우저'), bundled: fs.existsSync(BUNDLED_BROWSER) };
+    engineInfo = { type: 'builtin', name: t('내장 브라우저'), bundled: (BUNDLED_BROWSER && fs.existsSync(BUNDLED_BROWSER)) };
   }
   tabs.on('change', (state) => send('tabs:state', state));
 

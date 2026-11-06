@@ -17,3 +17,5 @@ keys/
 # build outputs (npx tsc -b; apps/desktop/native/build.cmd builds the helper exe)
 packages/*/dist/
 apps/desktop/native/*.exe
+
+apps/desktop/native/mac/anb-desktop-mac

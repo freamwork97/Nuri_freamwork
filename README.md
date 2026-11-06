@@ -9,10 +9,10 @@ Tell it what you need. Nuri opens the pages, clicks, types, fills in forms, runs
 
 **English** · [한국어](README.ko.md)
 
-**🪟 Windows edition** — Nuri 1.0 runs on **Windows 10 and 11 (64-bit)** only. macOS and Linux are not supported yet.
+**This fork:** Windows support plus macOS 14+ launch and build support. See the macOS instructions below.
 
 ![License: MIT](https://img.shields.io/badge/license-MIT-5b3fd9)
-![Platform: Windows only](https://img.shields.io/badge/platform-Windows%20only-5b3fd9)
+![Platform: Windows and macOS](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-5b3fd9)
 ![Version](https://img.shields.io/badge/version-1.0.0-5b3fd9)
 ![Languages](https://img.shields.io/badge/UI-English%20%7C%20%ED%95%9C%EA%B5%AD%EC%96%B4-5b3fd9)
 
@@ -51,6 +51,26 @@ Tell it what you need. Nuri opens the pages, clicks, types, fills in forms, runs
     <td width="50%"><img src="docs/screenshots/home-ko.png" alt="Korean interface" /><br /><sub>The same app in Korean</sub></td>
   </tr>
 </table>
+
+## macOS (this fork)
+
+Requires macOS 14+, Apple Silicon or Intel, Node.js 22+, and Xcode Command Line Tools (`xcode-select --install`). Install and log in to at least one supported AI CLI on your Mac; WSL is not used.
+
+```bash
+git clone https://github.com/freamwork97/Nuri_freamwork.git
+cd Nuri_freamwork
+npm ci
+npm run build
+cd apps/desktop
+npm ci
+npm run get-chromium
+npm run build:mac-helper
+npm start
+```
+
+Allow Accessibility and Screen Recording in System Settings → Privacy & Security for Nuri (or Electron/Terminal during development), then restart. The existing Mac helper provides background control; Windows Sandbox, HWP COM automation and login autostart remain Windows-only. Actual desktop control needs verification on a Mac with permissions granted.
+
+Run `npm run dist:mac` on the same architecture after downloading Chromium to build a DMG. Build Apple Silicon and Intel releases on their respective Macs. Public distribution requires configuring Apple signing and notarization. Installed data uses `~/Library/Application Support/Nuri`. Finder launches also search `~/.local/bin`, `/opt/homebrew/bin`, and `/usr/local/bin`; use `npm start` with your shell PATH for CLIs managed by nvm or other custom locations. Browser shortcuts support Command-T and Command-W.
 
 ## Getting started (Windows)
 

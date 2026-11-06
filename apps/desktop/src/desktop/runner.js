@@ -235,7 +235,7 @@ async function executeDesktop({ helper, session }, action, target, obs, windows)
 }
 
 /** @param {import('../agent/agent').Agent} agent */
-const unavailable = () => t('컴퓨터 제어는 Windows 데스크톱 앱에서만 사용할 수 있습니다 (apps/desktop/native/anb-desktop.exe 필요).');
+const unavailable = () => t('컴퓨터 제어 도우미가 없습니다. Windows는 native/build.cmd, macOS는 bash native/mac/build-mac.sh로 빌드하세요.');
 
 /** UI entry point for the 컴퓨터 제어 mode. */
 async function runDesktop(agent, goal, provider = 'gemini', opts = {}) {

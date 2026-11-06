@@ -13,7 +13,8 @@
     "bundle-server": "esbuild ../../packages/anb-orchestrator/dist/server.js --bundle --platform=node --format=esm --target=node22 --outfile=build/server/server.mjs",
     "dist": "npm run bundle-server && electron-builder --win nsis",
     "dist:dir": "npm run bundle-server && electron-builder --win --dir",
-    "dist:mac": "npm run bundle-server && electron-builder --mac dmg"
+    "dist:mac": "npm --prefix ../.. run build && npm run build:mac-helper && npm run bundle-server && electron-builder --mac dmg",
+    "build:mac-helper": "bash native/mac/build-mac.sh"
   },
   "devDependencies": {
     "electron": "45.0.0",
@@ -83,7 +84,17 @@
       "extendInfo": {
         "NSAppleEventsUsageDescription": "Nuri controls apps for you when you ask it to.",
         "NSScreenCaptureUsageDescription": "Nuri looks at the window it works in."
-      }
+      },
+      "minimumSystemVersion": "14.0",
+      "extraResources": [
+        {
+          "from": "../../vendor",
+          "to": "vendor",
+          "filter": [
+            "chrome-mac-${arch}/**"
+          ]
+        }
+      ]
     }
   }
 }

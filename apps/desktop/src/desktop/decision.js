@@ -11,7 +11,7 @@ const DESKTOP_ACTIONS = new Set([
 
 // Apps that open without asking. Anything else (scripts, installers, unknown paths) needs approval.
 const SAFE_LAUNCH = /^(notepad|calc|mspaint|explorer|write|wordpad|snippingtool|ms-settings:.*|ms-paint:|calculator:|https?:\/\/\S+|winword|excel|powerpnt|hwp|chrome|msedge|whale|firefox|kakaotalk|telegram)(\.exe)?$/i;
-const SHELL_PROCESS = /^(cmd|powershell|pwsh|windowsterminal|wt|wsl|bash|conhost|openconsole|mintty)$/i;
+const SHELL_PROCESS = /^(cmd|powershell|pwsh|windowsterminal|wt|wsl|bash|conhost|openconsole|mintty|Terminal|iTerm2|iTerm|Warp|Alacritty|kitty)$/i;
 // A real terminal window (not e.g. a normal window that a PowerShell script created).
 const TERMINAL_CLASS = /^(ConsoleWindowClass|CASCADIA_HOSTING_WINDOW_CLASS|mintty|VirtualConsoleClass|PseudoConsoleWindow)$/i;
 const isTerminal = (fg) => (fg?.class ? TERMINAL_CLASS.test(fg.class) : SHELL_PROCESS.test(String(fg?.process || '')));
@@ -78,8 +78,9 @@ function desktopRiskOf(action, { target, fg, typing = 'auto' } = {}) {
       const k = normKeys(action.keys);
       if (k.includes('shift+delete') || k.includes('shift+del')) return t('파일을 영구 삭제(Shift+Delete)하려고 합니다. 진행할까요?');
       if (/^(delete|del)$/.test(k) && /^explorer$/i.test(proc)) return t('탐색기에서 선택한 항목을 삭제하려고 합니다. 진행할까요?');
+      if (/^cmd\+(?:alt\+)?(?:backspace|delete)$/.test(k) && /^finder$/i.test(proc)) return t('파일을 삭제하려고 합니다. 진행할까요?');
       if (/^(enter|return)$/.test(k) && isTerminal(fg)) return t('터미널({app})에서 명령을 실행(Enter)하려고 합니다. 진행할까요?', { app: proc });
-      if (/^(enter|return|ctrl\+enter|alt\+s)$/.test(k) && MESSENGER_PROCESS.test(proc)) return t('{app}에서 메시지를 전송({keys})하려고 합니다. 진행할까요?', { app: proc, keys: action.keys });
+      if (/^(enter|return|ctrl\+enter|cmd\+enter|alt\+s)$/.test(k) && MESSENGER_PROCESS.test(proc)) return t('{app}에서 메시지를 전송({keys})하려고 합니다. 진행할까요?', { app: proc, keys: action.keys });
       return null;
     }
     default:

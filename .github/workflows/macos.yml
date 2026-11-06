@@ -1,0 +1,25 @@
+name: macOS validation
+on:
+  push:
+  pull_request:
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-15, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            apps/desktop/package-lock.json
+      - run: npm ci
+      - run: npm ci --prefix apps/desktop
+      - run: npm run build
+      - run: npm --prefix apps/desktop run build:mac-helper
+      - run: node --test apps/desktop/test/platform.test.js apps/desktop/test/mac-helper.test.js apps/desktop/test/desktop.test.js
+      - run: npm --prefix apps/desktop run bundle-server

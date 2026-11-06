@@ -12,7 +12,7 @@ const ROOT = PACKAGED ? process.resourcesPath : path.resolve(__dirname, '..', '.
 // (src/autostart.js) cannot set environment variables.
 const ARG_PROFILE = (process.argv.find((a) => /^--anb-profile=[\w-]{1,20}$/.test(a)) || '').slice('--anb-profile='.length);
 const PROFILE = process.env.ANB_PROFILE || ARG_PROFILE;
-const appData = process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming');
+const appData = require('./platform').appDataBase();
 const APP_NAME = 'Nuri';
 
 /** Name of the per-user data folder in %APPDATA% ("Nuri", or "Nuri (test)" for a profile). */
@@ -82,6 +82,7 @@ module.exports = {
   DEBUG_PORT: process.env.ANB_DEBUG_PORT || '0',
   TAB_LIMIT_MB: Number(process.env.ANB_TAB_LIMIT_MB) || 1024, // src/tab-memory.js
   chromeUserAgent() {
-    return `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${process.versions.chrome} Safari/537.36`;
+    const platform = process.platform === 'darwin' ? 'Macintosh; Intel Mac OS X 10_15_7' : process.platform === 'win32' ? 'Windows NT 10.0; Win64; x64' : 'X11; Linux x86_64';
+    return `Mozilla/5.0 (${platform}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${process.versions.chrome} Safari/537.36`;
   },
 };
