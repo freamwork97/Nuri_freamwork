@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <title>Nuri</title>
+  <link rel="icon" href="favicon.png" />
+  <link rel="stylesheet" href="fonts/fonts.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand drag">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 26 26" width="26" height="26"><rect width="26" height="26" rx="8" fill="currentColor"/><circle cx="13" cy="13" r="5.5" fill="none" stroke="#fff" stroke-width="2.2"/><circle cx="17.5" cy="8.5" r="2" fill="#fff"/></svg>
+        </div>
+        <span>Nuri</span>
+      </div>
+
+      <button class="new-task" id="newTaskBtn">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        새 작업
+      </button>
+
+      <div class="history-wrap">
+        <div class="section-label" id="scheduleLabel" hidden>예약됨</div>
+        <ul class="history schedules" id="scheduleList"></ul>
+        <div class="section-label" id="pinnedLabel" hidden>고정됨</div>
+        <ul class="history" id="pinnedList"></ul>
+        <div class="section-label">최근 작업</div>
+        <ul class="history" id="historyList"></ul>
+      </div>
+
+      <div class="resizer right" id="sidebarResizer" title="끌어서 폭 조절 · 더블클릭으로 기본값"></div>
+      <div class="sidebar-footer">
+        <div class="engine" id="engineStatus" title="AI 엔진 상태">
+          <span class="dot"></span><span class="engine-text">엔진 확인 중…</span>
+        </div>
+        <button class="link-btn" id="retryServerBtn" hidden>다시 연결</button>
+        <button class="icon-btn settings-btn" id="settingsBtn" title="설정 (Ctrl+,)">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Browser -->
+    <main class="browser">
+      <div class="tabbar drag" id="tabbar">
+        <div class="tabs" id="tabs"></div>
+        <button class="icon-btn no-drag" id="newTabBtn" title="새 탭 (Ctrl+T)">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+      <div class="toolbar">
+        <button class="icon-btn" id="backBtn" title="뒤로 (Alt+←)">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="icon-btn" id="forwardBtn" title="앞으로 (Alt+→)">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <button class="icon-btn" id="reloadBtn" title="새로고침 (F5)">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+        </button>
+        <button class="icon-btn" id="homeBtn" title="홈">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+        </button>
+        <form class="address" id="addressForm">
+          <svg class="lock" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          <input id="addressInput" spellcheck="false" autocomplete="off" placeholder="주소를 입력하거나 검색하세요" />
+        </form>
+      </div>
+      <!-- 설정: covers the browser column (the page view is hidden while it is open) -->
+      <section class="settings-page" id="settingsPage" hidden>
+        <header class="settings-head drag">
+          <h2>설정</h2>
+          <span class="settings-saved" id="settingsSaved"></span>
+          <button class="icon-btn no-drag" id="settingsClose" title="닫기 (Esc)">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </header>
+        <div class="settings-body">
+          <nav class="settings-nav" id="settingsNav"></nav>
+          <div class="settings-content" id="settingsContent"></div>
+        </div>
+      </section>
+      <div class="browser-slot" id="browserSlot">
+        <div class="slot-placeholder">페이지를 불러오는 중…</div>
+        <div class="chrome-panel" id="chromePanel" hidden>
+          <div class="chrome-card">
+            <div class="chrome-logo">
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="3.6"/><path d="M12 8.4h8.6M8.9 13.8 4.6 6.3M15.1 13.8l-4.3 7.6"/></svg>
+            </div>
+            <h3 id="chromeTitle">브라우저는 Chrome 창에서 열립니다</h3>
+            <p>AI 자동화는 PC에 설치된 진짜 <span id="chromeName">Chrome</span>을 전용 창으로 열어 사용합니다. Google 로그인도 그 창에서 그대로 됩니다. 한 번 로그인하면 계속 유지됩니다.</p>
+            <p class="chrome-sub">위 주소창과 탭은 그 Chrome 창을 조작합니다. 평소 쓰는 Chrome과는 따로 분리된 프로필입니다.</p>
+            <button class="btn-primary" id="chromeShow">Chrome 창 보기</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Agent panel -->
+    <section class="agent">
+      <div class="resizer left" id="agentResizer" title="끌어서 폭 조절 · 더블클릭으로 기본값"></div>
+      <header class="agent-header drag">
+        <button class="icon-btn panel-only" id="historyBtn" title="작업 기록">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <div class="panel-tabs">
+          <button class="panel-tab active" data-view="chat">에이전트</button>
+          <button class="panel-tab" data-view="accounts">연결<span class="long"> · 스킬</span></button>
+        </div>
+        <span class="run-chip" id="runChip">대기</span>
+        <button class="icon-btn panel-only" id="panelSettingsBtn" title="설정">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </header>
+
+      <div class="agent-card">
+      <div class="accounts-view" id="accountsView" hidden>
+        <div class="acc-intro">
+          <h3>AI 계정 연결</h3>
+          <p>모든 모델은 공식 CLI의 <strong>구독 로그인</strong>으로만 실행됩니다. API 키(종량제)는 차단되어 사용량이 구독 플랜에서 차감됩니다.</p>
+        </div>
+        <div id="accountList" class="acc-list"><div class="acc-loading"><span class="spinner"></span> 계정 상태 확인 중…</div></div>
+        <div class="acc-code" id="codeBox" hidden>
+          <p>브라우저 로그인 페이지에 코드가 표시되면 붙여넣으세요.</p>
+          <div class="acc-code-row">
+            <input id="codeInput" placeholder="인증 코드" autocomplete="off" />
+            <button class="btn-primary" id="codeSubmit">확인</button>
+          </div>
+        </div>
+        <div class="acc-section-head">
+          <h3>스킬 · 플러그인 · MCP</h3>
+          <button class="link-btn" id="capsRefresh">새로고침</button>
+        </div>
+        <p class="acc-sub">어시스턴트 모드와 브라우저 에이전트의 '위임' 단계에서 각 플랫폼에 설치된 기능을 그대로 사용합니다.</p>
+        <div id="capsList" class="caps-list"></div>
+        <button class="link-btn ws-link" id="openWorkspace">작업 결과 폴더 열기 (workspace)</button>
+      </div>
+
+      <div class="messages" id="messages">
+        <div class="empty" id="emptyState">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>
+          </div>
+          <h2>무엇을 도와드릴까요?</h2>
+          <p>명령하면 AI가 왼쪽 브라우저를 직접 보고, 클릭하고, 입력하며 작업을 수행합니다.</p>
+          <div class="suggestions">
+            <button class="suggestion" data-prompt="쿠팡에서 김치찌개 국내산 재료(돼지고기 앞다리살, 김치, 두부, 대파) 검색해서 각각 장바구니에 담아줘">
+              <strong>쿠팡 장바구니</strong><span>김치찌개 재료 찾아서 담기</span>
+            </button>
+            <button class="suggestion" data-prompt="구글에서 오늘 주요 뉴스 5개를 찾아 요약해줘">
+              <strong>뉴스 요약</strong><span>오늘 주요 뉴스 5개</span>
+            </button>
+            <button class="suggestion" data-mode="desktop" data-prompt="메모장을 열고 오늘 할 일 목록 3가지를 작성해줘 (저장은 하지 마)">
+              <strong>컴퓨터 제어</strong><span>메모장 열어 할 일 작성</span>
+            </button>
+            <button class="suggestion" data-mode="autopilot" data-prompt="나라장터에서 '홈페이지 유지관리' 용역 입찰공고를 찾아 표로 정리하고, 1건을 골라 제안요청서를 읽은 뒤 제안서를 한글(HWP)로 작성해줘. 투찰·제출은 하지 마.">
+              <strong>오토파일럿</strong><span>나라장터 공고 → 제안서(한글)</span>
+            </button>
+            <button class="suggestion" data-prompt="현재 보고 있는 페이지의 핵심 내용을 3줄로 요약해줘">
+              <strong>현재 페이지 요약</strong><span>지금 화면 3줄 요약</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="live" id="liveStatus" hidden>
+        <span class="spinner"></span><span id="liveText">준비 중…</span>
+      </div>
+
+      <form class="composer" id="composer">
+        <div class="composer-top">
+          <div class="mode-switch" id="modeSwitch">
+            <button type="button" class="mode active" data-mode="browser" title="AI가 브라우저를 직접 조작합니다">브라우저<span class="long"> 자동화</span></button>
+            <button type="button" class="mode" data-mode="desktop" title="AI가 화면을 보고 마우스·키보드로 Windows 프로그램을 직접 조작합니다">컴퓨터<span class="long"> 제어</span></button>
+            <button type="button" class="mode" data-mode="autopilot" title="긴 작업을 단계별 계획으로 나눠 브라우저·PC·문서 작성까지 자동으로 진행합니다">오토파일럿</button>
+            <button type="button" class="mode" data-mode="assistant" title="각 플랫폼의 스킬·플러그인·MCP로 작업합니다">어시스턴트</button>
+          </div>
+          <button type="button" class="toggle-chip" id="qualityToggle" data-on="false" title="정확 모드: 더 신중한 모델 설정 (느림)">빠름</button>
+          <button type="button" class="toggle-chip" id="attachToggle" data-on="false" title="현재 페이지 내용을 참고 자료로 함께 보냅니다" hidden>현재 페이지 첨부</button>
+        </div>
+        <div class="attach-list" id="attachList" hidden></div>
+        <textarea id="promptInput" rows="1" placeholder="무엇이든 시켜보세요"></textarea>
+        <div class="composer-row">
+          <select id="modelSelect" class="model-select" title="AI 모델">
+            <option value="gemini">Gemini 3.8 Flash</option>
+            <option value="claude">Claude</option>
+            <option value="gpt">GPT (Codex)</option>
+          </select>
+          <button type="button" class="icon-btn" id="fileBtn" title="파일 첨부 (끌어다 놓기·이미지 붙여넣기도 가능)">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5l-8.5 8.5a5.5 5.5 0 0 1-7.8-7.8l9-9a3.7 3.7 0 0 1 5.2 5.2l-9 9a1.8 1.8 0 0 1-2.6-2.6l8.3-8.3"/></svg>
+          </button>
+          <span class="hint" id="composerHint">Enter 실행 · Shift+Enter 줄바꿈</span>
+          <button type="button" class="icon-btn" id="scheduleBtn" title="이 작업 예약하기 (정해진 시간에 자동 실행)">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </button>
+          <button type="submit" class="send" id="sendBtn" title="실행">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          </button>
+          <button type="button" class="send stop" id="stopBtn" title="중지" hidden>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+          </button>
+        </div>
+      </form>
+      </div>
+    </section>
+  </div>
+  <dialog class="sch-dialog" id="scheduleDialog">
+    <div class="sch-title" id="schTitle">작업 예약</div>
+    <label class="sch-field">작업
+      <textarea id="schGoal" rows="3"></textarea>
+    </label>
+    <div class="sch-grid">
+      <label class="sch-field">모드
+        <select id="schMode">
+          <option value="browser">브라우저 자동화</option>
+          <option value="desktop">컴퓨터 제어</option>
+          <option value="autopilot">오토파일럿</option>
+          <option value="assistant">어시스턴트</option>
+        </select>
+      </label>
+      <label class="sch-field">AI 모델
+        <select id="schProvider">
+          <option value="gemini">Gemini</option>
+          <option value="claude">Claude</option>
+          <option value="gpt">GPT (Codex)</option>
+        </select>
+      </label>
+    </div>
+    <div class="sch-grid">
+      <label class="sch-field">반복
+        <select id="schRepeat">
+          <option value="daily">매일</option>
+          <option value="weekdays">평일 (월~금)</option>
+          <option value="weekly">매주</option>
+          <option value="monthly">매월</option>
+          <option value="interval">일정 간격마다</option>
+          <option value="once">한 번</option>
+        </select>
+      </label>
+      <label class="sch-field" id="schDayRow">요일
+        <select id="schDay">
+          <option value="1">월요일</option><option value="2">화요일</option><option value="3">수요일</option><option value="4">목요일</option><option value="5">금요일</option><option value="6">토요일</option><option value="0">일요일</option>
+        </select>
+      </label>
+      <label class="sch-field" id="schMonthDayRow">날짜
+        <input type="number" id="schMonthDay" min="1" max="31" />
+      </label>
+      <label class="sch-field" id="schEveryRow">간격
+        <input type="number" id="schEvery" min="1" value="6" />
+      </label>
+      <label class="sch-field" id="schUnitRow">단위
+        <select id="schUnit">
+          <option value="min">분</option>
+          <option value="hour">시간</option>
+          <option value="day">일</option>
+        </select>
+      </label>
+      <label class="sch-field" id="schDateRow">날짜
+        <input type="date" id="schDate" />
+      </label>
+      <label class="sch-field"><span id="schTimeLabel">시각</span>
+        <input type="time" id="schTime" value="09:00" />
+      </label>
+    </div>
+    <label class="sch-check" id="schEnabledRow"><input type="checkbox" id="schEnabled" /> 예약 켜기</label>
+    <p class="sch-help">앱이 켜져 있을 때(트레이 포함) 정해진 시간에 실행됩니다. 앱이 꺼져 있던 동안 지난 예약은 건너뜁니다. 설정 &gt; 일반에서 "Windows 시작 시 자동 실행"을 켜 두면 앱을 열지 않아도 됩니다.<br />예약 실행 중 질문·승인에 5분 동안 답이 없으면 AI가 스스로 판단해 계속합니다(결제 승인은 거부). 반복 예약은 지난 실행 결과를 참고하므로 "새로 올라온 것만" 같은 작업도 할 수 있습니다.</p>
+    <div class="sch-error" id="schError"></div>
+    <div class="sch-actions">
+      <button type="button" class="link-btn danger" id="schDelete">예약 삭제</button>
+      <span class="sch-gap"></span>
+      <button type="button" class="btn-ghost" id="schCancel">취소</button>
+      <button type="button" class="btn-primary" id="schSave">저장</button>
+    </div>
+  </dialog>
+
+  <script src="locales/en.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/richtext.js"></script>
+  <script src="js/dom.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/browser.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/schedules.js"></script>
+  <script src="js/composer.js"></script>
+  <script src="js/accounts.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

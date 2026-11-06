@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'" />
+  <title>AI 커서</title>
+  <style>
+    html, body { margin: 0; width: 100%; height: 100%; background: transparent; overflow: hidden; pointer-events: none; }
+    /* The pointer's tip sits at (TIP_X, TIP_Y) = (14, 12) in this window (see session.js). */
+    .ring { position: absolute; left: 14px; top: 12px; width: 0; height: 0; border-radius: 50%;
+      border: 3px solid rgba(129, 140, 248, .9); transform: translate(-50%, -50%); opacity: 0; }
+    .ring.go { animation: ring .55s ease-out; }
+    @keyframes ring { 0% { width: 4px; height: 4px; opacity: 1; } 100% { width: 34px; height: 34px; opacity: 0; } }
+    svg { position: absolute; left: 14px; top: 12px; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .45)); }
+    .tag { position: absolute; left: 34px; top: 34px; padding: 2px 7px; border-radius: 9px;
+      background: #6366f1; color: #fff; font: 700 11px "Segoe UI", "Malgun Gothic", sans-serif; white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <div class="ring" id="ring"></div>
+  <svg width="22" height="30" viewBox="0 0 22 30">
+    <path d="M1 1 L1 24 L7 18.5 L11 28 L15 26.3 L11 17 L19 17 Z" fill="#6366f1" stroke="#fff" stroke-width="2" stroke-linejoin="round" />
+  </svg>
+  <div class="tag">AI</div>
+  <script>
+    window.clickFx = () => {
+      const r = document.getElementById('ring');
+      r.classList.remove('go');
+      void r.offsetWidth;
+      r.classList.add('go');
+    };
+  </script>
+</body>
+</html>

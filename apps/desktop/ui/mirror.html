@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<title>크로미움 세션</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #f4f4f5; font: 13px "Malgun Gothic", sans-serif; color: #52525b; }
+  body { display: flex; flex-direction: column; }
+  #frame { flex: 1; min-height: 0; width: 100%; object-fit: contain; }
+  .bar { display: flex; align-items: center; gap: 12px; padding: 7px 12px; background: #fff; border-top: 1px solid #e4e4e7; }
+  .bar span { flex: 1; }
+  .bar a { color: #4f46e5; font-weight: 600; text-decoration: none; }
+</style>
+</head>
+<body>
+  <img id="frame" alt="" />
+  <div class="bar"><span>AI가 구글 세션에서 작업하는 화면입니다 (보기 전용). 로그인이나 본인 확인이 필요하면 창이 자동으로 열립니다.</span><a href="#window">창으로 열기</a></div>
+  <script src="locales/en.js"></script>
+  <script src="js/i18n.js"></script>
+  <script>
+    const frame = document.getElementById('frame');
+    window.show = (data) => { frame.src = `data:image/jpeg;base64,${data}`; };
+    // The app opens the window on this hash; clicking again must fire it again.
+    addEventListener('hashchange', () => setTimeout(() => history.replaceState(null, '', ' '), 100));
+  </script>
+</body>
+</html>

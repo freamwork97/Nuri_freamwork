@@ -1,0 +1,24 @@
+{
+  "name": "nuri",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "Nuri: a desktop AI browser that does web and PC work for you, using your own AI subscriptions",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "node --test tests/unit/*.test.js tests/integration/*.test.js apps/desktop/test/*.test.js",
+    "test:node": "node --test tests/**/*.test.mjs tests/**/*.test.js",
+    "typecheck": "tsc --noEmit",
+    "start": "node packages/anb-orchestrator/dist/server.js",
+    "test:desktop": "node --test apps/desktop/test/*.test.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "electron": "^45.0.0",
+    "typescript": "^5.7.2"
+  }
+}

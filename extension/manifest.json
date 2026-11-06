@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Nuri",
+  "version": "1.0.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApT02YLrfLAk7iLf0wEY9Rz21w/rFFgpReK2uVUidvOMDXusYHIm5QbZfIq5stRFMpED5CGzuxlx5MeIsHuvGnlKd1iNE3JpztY800nqlHma1HoLLYix+AtJ7p1NNIvwT8+sFj2SgQ6FXU5tn9fJowKx7TQDBD9wWhdFgbrrLOfN1/CED3moUOVZO7SNd3owN4H6DJsWB3yCmnwwrwdWBsEzgyi5xIFwnVoZnUeyjBezvs7OBsOgTXPPdGqza4Zz7rHMK39k4Sl9H+LXk3ZYpo3E13PRoUaZ/OpObEwSUNLbU2QY1YVzUBLMssWlkHuLDLzD3D5n2nc4SzDkHheneYwIDAQAB",
+  "description": "AI 자동화 브라우저 - Gemini, GPT, Claude 연동 자율 브라우징 에이전트",
+  "permissions": [
+    "sidePanel",
+    "activeTab",
+    "tabs",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "http://localhost:3456/*",
+    "http://127.0.0.1:3456/*"
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "action": {
+    "default_title": "AI 자동화 사이드패널 열기",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content-script.js"
+      ],
+      "run_at": "document_end"
+    }
+  ]
+}

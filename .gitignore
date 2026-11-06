@@ -1,0 +1,19 @@
+node_modules/
+logs/
+workspace/
+*.tsbuildinfo
+# local auth token and task data
+.anb-data/
+# extension signing key (private)
+keys/*.pem
+# installer builds (apps/desktop: npm run dist)
+apps/desktop/build/
+apps/desktop/release/
+# Chromium for Google sign-in: too big for git, fetched with `npm run get-chromium` (apps/desktop)
+vendor/
+# task outputs of test/extra profiles (user data)
+workspace-*/
+keys/
+# build outputs (npx tsc -b; apps/desktop/native/build.cmd builds the helper exe)
+packages/*/dist/
+apps/desktop/native/*.exe

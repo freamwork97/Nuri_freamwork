@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Nuri",
+  "version": "2.1.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApT02YLrfLAk7iLf0wEY9Rz21w/rFFgpReK2uVUidvOMDXusYHIm5QbZfIq5stRFMpED5CGzuxlx5MeIsHuvGnlKd1iNE3JpztY800nqlHma1HoLLYix+AtJ7p1NNIvwT8+sFj2SgQ6FXU5tn9fJowKx7TQDBD9wWhdFgbrrLOfN1/CED3moUOVZO7SNd3owN4H6DJsWB3yCmnwwrwdWBsEzgyi5xIFwnVoZnUeyjBezvs7OBsOgTXPPdGqza4Zz7rHMK39k4Sl9H+LXk3ZYpo3E13PRoUaZ/OpObEwSUNLbU2QY1YVzUBLMssWlkHuLDLzD3D5n2nc4SzDkHheneYwIDAQAB",
+  "description": "Nuri 에이전트: 브라우저 자동화 · 컴퓨터 제어 · 오토파일럿",
+  "permissions": [
+    "sidePanel",
+    "tabs",
+    "storage"
+  ],
+  "side_panel": {
+    "default_path": "ui/panel.html"
+  },
+  "action": {
+    "default_title": "AI 에이전트 열기 (Alt+Shift+A)",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+A"
+      },
+      "description": "AI 에이전트 열기"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' ws://127.0.0.1:*"
+  }
+}

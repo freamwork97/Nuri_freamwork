@@ -1,0 +1,89 @@
+{
+  "name": "anb-desktop",
+  "productName": "Nuri",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Nuri desktop app: a Chromium browser with an AI agent that operates it",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/*.test.js",
+    "get-chromium": "node scripts/get-chromium.js",
+    "bundle-server": "esbuild ../../packages/anb-orchestrator/dist/server.js --bundle --platform=node --format=esm --target=node22 --outfile=build/server/server.mjs",
+    "dist": "npm run bundle-server && electron-builder --win nsis",
+    "dist:dir": "npm run bundle-server && electron-builder --win --dir",
+    "dist:mac": "npm run bundle-server && electron-builder --mac dmg"
+  },
+  "devDependencies": {
+    "electron": "45.0.0",
+    "electron-builder": "25.1.8",
+    "esbuild": "0.24.2"
+  },
+  "dependencies": {
+    "fflate": "^0.8.2",
+    "pdfjs-dist": "^4.10.38",
+    "playwright-core": "^1.64.1",
+    "ws": "^8.18.0"
+  },
+  "author": "Nuri contributors",
+  "build": {
+    "appId": "Nuri.Desktop",
+    "productName": "Nuri",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "overlay-preload.js",
+      "src/**",
+      "ui/**",
+      "assets/**",
+      "extension/**",
+      "native/anb-desktop.exe",
+      "native/hwp.ps1",
+      "native/mac/anb-desktop-mac",
+      "!**/*.test.js"
+    ],
+    "asarUnpack": [
+      "native/**"
+    ],
+    "extraResources": [
+      {
+        "from": "build/server",
+        "to": "server"
+      },
+      {
+        "from": "../../scripts/start-server.sh",
+        "to": "scripts/start-server.sh"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico",
+      "extraResources": [
+        {
+          "from": "../../vendor/chrome-win64",
+          "to": "vendor/chrome-win64"
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "Nuri",
+      "createDesktopShortcut": true,
+      "artifactName": "Nuri-Setup-${version}.${ext}"
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.productivity",
+      "extendInfo": {
+        "NSAppleEventsUsageDescription": "Nuri controls apps for you when you ask it to.",
+        "NSScreenCaptureUsageDescription": "Nuri looks at the window it works in."
+      }
+    }
+  }
+}

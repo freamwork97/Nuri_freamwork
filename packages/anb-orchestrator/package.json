@@ -1,0 +1,17 @@
+{
+  "name": "@anb/orchestrator",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@anb/core": "*",
+    "@anb/provider-agy": "*",
+    "@anb/mcp-server": "*"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "license": "MIT"
+}
