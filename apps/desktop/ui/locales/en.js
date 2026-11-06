@@ -617,4 +617,9 @@
   "승인 방식": "Approvals",
   "입력 확인": "Typing",
   "대기 중": "Waiting",
+  "개인정보 · 약관": "Privacy · Terms",
+  "개인정보처리방침": "Privacy Policy",
+  "Nuri는 아무것도 수집하지 않습니다. 내 PC에 저장되는 것과 AI 회사로 보내는 것을 설명합니다": "Nuri collects nothing. Explains what is stored on your PC and what goes to the AI provider",
+  "이용약관": "Terms of Use",
+  "Nuri가 나를 대신해 한 행동에 대한 책임과 보증의 범위": "Responsibility for what Nuri does for you, and what is not guaranteed",
 });

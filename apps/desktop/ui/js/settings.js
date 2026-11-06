@@ -11,6 +11,11 @@
 
   const cleanError = (e) => String(e?.message || e).replace(/^Error invoking remote method '[^']+': (Error: )?/, '');
 
+  // Privacy Policy and Terms of Use (repository documents), in the interface language.
+  const DOCS = ANB.lang === 'en'
+    ? { privacy: 'https://github.com/lsszz2100/Nuri/blob/main/PRIVACY.md', terms: 'https://github.com/lsszz2100/Nuri/blob/main/TERMS.md' }
+    : { privacy: 'https://github.com/lsszz2100/Nuri/blob/main/PRIVACY.md#개인정보처리방침', terms: 'https://github.com/lsszz2100/Nuri/blob/main/TERMS.md#이용약관' };
+
   const APPROVAL = { ask: '매번 묻기', auto: '자동 승인', block: '항상 차단' };
   const APPROVAL_KEYS = ['safety.payments', 'safety.publish', 'safety.delete', 'safety.terminal', 'safety.launch', 'safety.skills', 'safety.other'];
 
@@ -136,6 +141,10 @@
         { title: '정리', rows: [
           { kind: 'custom', label: '작업 기록 지우기', help: '왼쪽 "최근 작업" 목록을 지웁니다 (고정한 작업은 남김)', render: () => button('지우기', clearHistory, 'btn-danger') },
           { kind: 'custom', label: '설정 초기화', help: '모든 설정을 처음 값으로 되돌립니다', render: () => button('초기화', resetAll, 'btn-danger') },
+        ] },
+        { title: '개인정보 · 약관', rows: [
+          { kind: 'custom', label: '개인정보처리방침', help: 'Nuri는 아무것도 수집하지 않습니다. 내 PC에 저장되는 것과 AI 회사로 보내는 것을 설명합니다', render: () => button(t('열기'), () => api.openExternal(DOCS.privacy)) },
+          { kind: 'custom', label: '이용약관', help: 'Nuri가 나를 대신해 한 행동에 대한 책임과 보증의 범위', render: () => button(t('열기'), () => api.openExternal(DOCS.terms)) },
         ] },
       ],
     },

@@ -127,6 +127,10 @@ tests/                 engine unit and integration tests
 
 Run all tests with `npm test` from the repository root.
 
+## Privacy and terms
+
+Nuri collects nothing: there is no server, analytics or telemetry. What the app stores on your PC and what it sends to the AI provider you choose is described in the [Privacy Policy](PRIVACY.md). Using Nuri means you are responsible for the actions it takes for you; see the [Terms of Use](TERMS.md).
+
 ## License
 
 [MIT](LICENSE). Bundled fonts are under the SIL Open Font License 1.1 (see `apps/desktop/ui/fonts`).
