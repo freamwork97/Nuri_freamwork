@@ -305,7 +305,7 @@ class Agent extends EventEmitter {
         }
         if ((obs.humanCheck || this.googleWanted) && this.googleBrowser && !this.tabs.isChrome) {
           const { url } = obs;
-          const why = this.googleWanted ? t('Google 로그인 상태를 그대로 쓰도록 크로미움 창에서 이어갑니다') : t('사이트의 보안 확인이 앱 안 브라우저에서 진행되지 않아 크로미움 창에서 이어갑니다');
+          const why = this.googleWanted ? t('Google 로그인 상태를 그대로 쓰도록 보조 브라우저 창에서 이어갑니다') : t('사이트의 보안 확인이 앱 안 브라우저에서 진행되지 않아 보조 브라우저 창에서 이어갑니다');
           this.googleWanted = false;
           return this.inGoogleBrowser(async () => {
             await this.tabs.create(url, true);
@@ -604,7 +604,7 @@ class Agent extends EventEmitter {
   }
 
   /** Runs a browser loop in the bundled Chromium window instead of the app's tabs. */
-  async inGoogleBrowser(run, why = t('Google 계정이 필요한 작업이라 크로미움 창에서 진행합니다')) {
+  async inGoogleBrowser(run, why = t('Google 계정이 필요한 작업이라 보조 브라우저 창에서 진행합니다')) {
     const appTabs = this.tabs;
     this.emitEvent('note', { text: why });
     try {

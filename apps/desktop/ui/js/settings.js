@@ -49,7 +49,7 @@
           { key: 'general.closeAction', kind: 'select', label: '창 닫기(X) 버튼', help: '트레이로 숨기면 앱이 계속 실행되어 예약 작업이 정해진 시간에 실행됩니다', labels: { ask: '매번 묻기', tray: '트레이로 숨기기', quit: '종료 (작업 중이면 묻기)' } },
         ] },
         { title: '브라우저', rows: [
-          { key: 'general.browserEngine', kind: 'select', label: '브라우저 방식', help: '단일 창: 브라우저와 AI 에이전트가 한 창에 있습니다. Google 로그인은 작은 로그인 창에서 한 뒤 자동으로 가져옵니다. 사이드 패널: 진짜 Chromium 브라우저에 AI 에이전트가 사이드 패널로 들어 있습니다. 바꾸면 앱을 다시 시작해야 적용됩니다', labels: { builtin: '단일 창 (권장)', chromium: 'Chromium + 사이드 패널' } },
+          { key: 'general.browserEngine', kind: 'select', label: '브라우저 방식', help: '단일 창: 브라우저와 AI 에이전트가 한 창에 있습니다. Google 로그인은 작은 로그인 창에서 한 뒤 자동으로 가져옵니다. 사이드 패널: 별도 브라우저 창에 AI 에이전트가 사이드 패널로 들어 있습니다. 바꾸면 앱을 다시 시작해야 적용됩니다', labels: { builtin: '단일 창 (권장)', chromium: '브라우저 + 사이드 패널' } },
           { key: 'general.confirmTabClose', kind: 'switch', label: '탭 닫기 전에 확인', help: '탭의 X 버튼을 누르면 닫을지 먼저 묻습니다' },
           { key: 'general.homeUrl', kind: 'text', label: '시작 페이지', help: '새 탭과 홈 버튼이 여는 주소 (https:// 로 시작)', placeholder: 'https://www.google.com' },
           { key: 'general.searchEngine', kind: 'select', label: '검색 엔진', help: '주소창에 주소가 아닌 말을 입력했을 때', labels: { google: 'Google', naver: '네이버', bing: 'Bing' } },
@@ -266,8 +266,8 @@
     const engine = el('span');
     engine.append(el('span', 'status-dot ' + (state.serverReady ? 'ok' : 'bad')), document.createTextNode(state.serverReady ? t('연결됨') : t('연결 안 됨')));
     add('AI 엔진', engine);
-    add('앱 버전', `${info.version || '-'} (Electron ${info.electron || '-'}, Chromium ${info.chrome || '-'})`);
-    add('브라우저 방식', info.engine ? (info.engine.type === 'chromium' ? t('Nuri (Chromium + 사이드 패널)') : t('내장 브라우저 (예전 방식)')) : '-');
+    add('앱 버전', info.version ? `Nuri ${info.version}` : '-');
+    add('브라우저 방식', info.engine ? (info.engine.type === 'chromium' ? t('Nuri (사이드 패널)') : t('내장 브라우저 (예전 방식)')) : '-');
     add('프로필', info.profile || '-');
     add('작업 결과 폴더', info.workspace || '-');
     add('설정 · 데이터 위치', info.userData || '-');

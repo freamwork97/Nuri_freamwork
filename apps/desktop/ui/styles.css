@@ -572,3 +572,22 @@ html.panel .set-control input[type=text] { width: 100%; min-width: 200px; }
 html.panel .info-grid { grid-template-columns: 1fr; gap: 2px; }
 html.panel .info-grid dd { margin-bottom: 6px; }
 .font-preview { font-size: calc(16px * var(--font-scale)); padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; line-height: 1.6; }
+
+/* ---------- Nuri's own question dialog (quit, close tab: ui/js/dialogs.js) ---------- */
+.app-dialog { width: min(440px, calc(100vw - 32px)); border: 0; border-radius: 18px; padding: 22px 22px 18px; background: var(--bg); color: var(--text); box-shadow: 0 28px 60px rgba(23,23,28,.22), 0 2px 8px rgba(23,23,28,.08); }
+.app-dialog::backdrop { background: rgba(23,23,28,.36); backdrop-filter: blur(2px); }
+.app-dialog[open] { animation: dialog-in .16s ease-out; }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: none; } }
+.app-dialog-head { display: flex; gap: 14px; align-items: flex-start; }
+.app-dialog-icon { width: 44px; height: 44px; flex: none; border-radius: 13px; display: grid; place-items: center; background: var(--brand-soft); color: var(--brand); }
+.app-dialog-icon.busy { background: #fff4e5; color: #b45309; }
+.app-dialog-text { min-width: 0; padding-top: 2px; }
+.app-dialog-title { margin: 0; font-size: calc(17px * var(--font-scale)); font-weight: 700; letter-spacing: -0.02em; }
+.app-dialog-message { margin: 6px 0 0; font-size: calc(13.5px * var(--font-scale)); color: var(--text-2); line-height: 1.55; }
+.app-dialog-detail { margin: 6px 0 0; font-size: calc(13px * var(--font-scale)); color: var(--muted); line-height: 1.6; word-break: break-word; }
+.app-dialog-check { display: flex; align-items: center; gap: 8px; margin: 16px 0 0 58px; font-size: calc(13px * var(--font-scale)); color: var(--text-2); cursor: pointer; }
+.app-dialog-check input { width: 16px; height: 16px; accent-color: var(--brand); }
+.app-dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.app-dialog-actions button { height: 38px; padding: 0 16px; font-size: calc(13.5px * var(--font-scale)); border-radius: 10px; }
+.app-dialog-actions .btn-danger { border-color: #f1c4c4; }
+.app-dialog-actions button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }

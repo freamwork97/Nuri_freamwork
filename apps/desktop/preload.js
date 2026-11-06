@@ -16,6 +16,13 @@ contextBridge.exposeInMainWorld('anb', {
   setBrowserCovered: (on) => ipcRenderer.send('browser:covered', !!on), // hides the page view while 설정 is open
   // settings (설정)
   getSettings: () => ipcRenderer.invoke('settings:get'),
+  // Nuri's own dialog for questions from the main process (quit, close tab): see src/ui-dialog.js
+  onDialog: (cb) => {
+    const handler = (_e, q) => cb(q);
+    ipcRenderer.on('dialog:ask', handler);
+    return () => ipcRenderer.removeListener('dialog:ask', handler);
+  },
+  answerDialog: (id, response, checked) => ipcRenderer.send('dialog:answer', { id, response, checked: !!checked }),
   reloadUi: () => ipcRenderer.send('ui:reload'), // redraws the UI (language change); the page itself may not navigate
   setSettings: (patch) => ipcRenderer.invoke('settings:set', patch),
   resetSettings: () => ipcRenderer.invoke('settings:reset'),

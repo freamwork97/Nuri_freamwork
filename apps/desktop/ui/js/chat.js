@@ -406,13 +406,13 @@
       waiting: [t('Google 로그인 창에서 로그인해 주세요'), t('로그인을 마치면 창은 자동으로 닫히고, 탭에서 하던 페이지가 로그인된 상태로 열립니다.')],
       done: [t('Google에 로그인되었습니다'), t('로그인 정보를 이 앱으로 가져왔습니다. 하던 페이지를 이어서 엽니다.')],
       failed: [t('Google 로그인을 마치지 못했습니다'), (info.reason ? info.reason + '. ' : '') + t('다시 시도하려면 아래 버튼을 누르세요.')],
-      humanCheck: [t('이 사이트는 앱 안 브라우저에서 넘어가지 않습니다'), t('사이트의 보안 확인이 앱 안 브라우저에서는 끝나지 않습니다. 크로미움 창에서 열면 정상적으로 진행됩니다.')],
-      chromium: [t('크로미움 창에서 이어갑니다'), t('Google 로그인 상태를 그대로 쓰도록 이 페이지를 크로미움 창에서 열었습니다.')],
-      manual: [t('Google이 이 앱 안에서의 로그인을 막았습니다'), t('로그인 창에 쓸 브라우저(vendor/chrome-win64)가 없습니다. 평소 쓰는 브라우저에서 로그인해 주세요.')],
+      humanCheck: [t('이 사이트는 앱 안 브라우저에서 넘어가지 않습니다'), t('사이트의 보안 확인이 앱 안 브라우저에서는 끝나지 않습니다. 보조 브라우저 창에서 열면 정상적으로 진행됩니다.')],
+      chromium: [t('보조 브라우저 창에서 이어갑니다'), t('Google 로그인 상태를 그대로 쓰도록 이 페이지를 보조 브라우저 창에서 열었습니다.')],
+      manual: [t('Google이 이 앱 안에서의 로그인을 막았습니다'), t('로그인 창에 쓸 브라우저 파일이 없습니다(vendor 폴더). 평소 쓰는 브라우저에서 로그인해 주세요.')],
     }[state] || ['', ''];
     loginCard.dataset.state = state;
     loginCard.replaceChildren(el('div', 'card-title', text[0]), el('div', 'card-body', text[1]));
-    const label = { humanCheck: t('크로미움 창에서 열기'), needed: t('Google 로그인'), waiting: t('로그인 창 다시 보기'), failed: t('Google 로그인 다시 시도'), manual: t('내 브라우저에서 Google 로그인 열기') }[state];
+    const label = { humanCheck: t('보조 브라우저 창에서 열기'), needed: t('Google 로그인'), waiting: t('로그인 창 다시 보기'), failed: t('Google 로그인 다시 시도'), manual: t('내 브라우저에서 Google 로그인 열기') }[state];
     if (label) {
       const actions = el('div', 'confirm-actions');
       const btn = el('button', state === 'waiting' ? 'btn-ghost' : 'btn-primary', label);

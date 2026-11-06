@@ -9,9 +9,11 @@ Tell it what you need. Nuri opens the pages, clicks, types, fills in forms, runs
 
 **English** · [한국어](README.ko.md)
 
+**🪟 Windows edition** — Nuri 1.0 runs on **Windows 10 and 11 (64-bit)** only. macOS and Linux are not supported yet.
+
 ![License: MIT](https://img.shields.io/badge/license-MIT-5b3fd9)
-![Platform: Windows](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-5b3fd9)
-![Electron](https://img.shields.io/badge/Electron-45-5b3fd9)
+![Platform: Windows only](https://img.shields.io/badge/platform-Windows%20only-5b3fd9)
+![Version](https://img.shields.io/badge/version-1.0.0-5b3fd9)
 ![Languages](https://img.shields.io/badge/UI-English%20%7C%20%ED%95%9C%EA%B5%AD%EC%96%B4-5b3fd9)
 
 <img src="docs/screenshots/task.png" alt="Nuri running a task: the AI reads Hacker News and reports a table" width="100%" />
@@ -52,7 +54,9 @@ Tell it what you need. Nuri opens the pages, clicks, types, fills in forms, runs
 
 ## Getting started (Windows)
 
-**You need:** Windows 10 or 11, [Node.js](https://nodejs.org) 22 or later, and at least one AI CLI signed in with a subscription:
+This is the Windows edition: the app, its computer-use helper and the installer are built for Windows only.
+
+**You need:** Windows 10 or 11 (64-bit), [Node.js](https://nodejs.org) 22 or later, and at least one AI CLI signed in with a subscription:
 
 | Model | CLI | Sign in |
 |---|---|---|
@@ -63,7 +67,7 @@ Tell it what you need. Nuri opens the pages, clicks, types, fills in forms, runs
 The CLIs can be installed on Windows, or inside WSL2 (Ubuntu). Nuri uses Windows when all of them are there, otherwise WSL.
 
 ```bash
-# 1. Desktop app dependencies (use Windows npm: Electron must be the Windows build)
+# 1. Desktop app dependencies (use the Windows npm, not the one in WSL)
 cd apps/desktop
 npm install
 
@@ -88,7 +92,7 @@ npm start
 ## How it works
 
 ```text
-┌──────────────────────── Nuri (Electron) ────────────────────────┐
+┌──────────────────────── Nuri desktop app ───────────────────────┐
 │  UI (sidebar · tabs · agent panel)                                │
 │  Agent loop ── Playwright (CDP, 127.0.0.1) ──▶ built-in Chromium │
 │      │      └─ desktop helper (UI Automation) ──▶ Windows apps   │
@@ -111,7 +115,7 @@ Each step, the agent sends the AI a compact view of the page (or a screenshot) a
 ## Project layout
 
 ```text
-apps/desktop/          Electron app: UI, agent, browser and desktop automation, scheduler
+apps/desktop/          desktop app: UI, agent, browser and desktop automation, scheduler
   src/agent/           browser agent (prompt, decisions, sub-agents, tools)
   src/automation/      Playwright bridge, page snapshots, actions, scripts
   src/desktop/         computer use (Windows helper, background sessions)

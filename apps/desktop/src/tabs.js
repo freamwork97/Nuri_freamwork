@@ -47,7 +47,7 @@ class TabManager extends EventEmitter {
   /** A tab showing the live picture of the Chromium session (google-browser.js). */
   createMirror() {
     const tab = this.create('about:blank', true);
-    tab.mirror = { title: t('크로미움 세션'), url: '' };
+    tab.mirror = { title: t('Google 세션 화면'), url: '' };
     tab.view.webContents.loadFile(path.join(__dirname, '..', 'ui', 'mirror.html'), { query: { lang: getLang() } }).catch(() => {});
     tab.view.webContents.on('did-navigate-in-page', (_e, url) => url.endsWith('#window') && this.emit('mirror-window'));
     this.mirror = tab;
@@ -56,7 +56,7 @@ class TabManager extends EventEmitter {
 
   mirrorPage({ title, url }) {
     if (!this.mirror) return;
-    Object.assign(this.mirror.mirror, { title: title || url || t('크로미움 세션'), url });
+    Object.assign(this.mirror.mirror, { title: title || url || t('Google 세션 화면'), url });
     this.changed();
   }
 

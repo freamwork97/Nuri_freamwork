@@ -35,7 +35,7 @@ function startTask(agent, settings, req = {}) {
 // workspace (downloads are untrusted), only shown in Explorer.
 const RUNNABLE = /\.(exe|com|bat|cmd|ps1|psm1|psd1|ps1xml|psc1|vbs|vbe|js|jse|wsf|wsh|ws|msi|msp|mst|msc|scr|lnk|pif|hta|cpl|jar|reg|url|inf|scf|sct|chm|hlp|appref-ms|application|gadget|xll|xlam|docm|xlsm|pptm|iso|img|vhd|vhdx|settingcontent-ms|library-ms|search-ms|diagcab|appx|appxbundle|msix|msixbundle)$/i;
 
-function registerIpc({ tabs, agent, server, ensureServer, settings, schedules, getWindow, engineInfo, ipc = require('./host/router').makeRouter(ipcMain) }) {
+function registerIpc({ tabs, agent, server, ensureServer, settings, schedules, getWindow, engineInfo, ipc = require('./host/router').makeRouter(ipcMain), ask = null }) {
   ipc.on('browser:bounds', (_e, b) => b && tabs.setBounds(b));
   ipc.on('browser:resizing', (_e, on) => tabs.setHidden(on === true, 'resize'));
   ipc.on('browser:covered', (_e, on) => tabs.setHidden(on === true, 'settings')); // settings page open
@@ -52,9 +52,7 @@ function registerIpc({ tabs, agent, server, ensureServer, settings, schedules, g
     values: settings.all(),
     options: Object.fromEntries(Object.entries(SCHEMA).filter(([, s]) => s.values).map(([k, s]) => [k, s.values])),
     info: {
-      version: app.getVersion(),
-      electron: process.versions.electron,
-      chrome: process.versions.chrome,
+      version: app.getVersion(), // Nuri's own version (apps/desktop/package.json)
       profile: PROFILE || t('기본'),
       userData: app.getPath('userData'),
       workspace: WORKSPACE_DIR,
@@ -94,12 +92,18 @@ function registerIpc({ tabs, agent, server, ensureServer, settings, schedules, g
     if (askingClose) return;
     askingClose = true;
     try {
-      const title = tabs.list().find((t) => t.id === tabId)?.title;
-      const opts = { type: 'question', title: 'Nuri', message: t('이 탭을 닫을까요?'), detail: title || undefined, buttons: [t('닫기'), t('취소')], defaultId: 0, cancelId: 1, noLink: true, checkboxLabel: t('다시 묻지 않기') };
-      const w = getWindow();
-      const r = w ? await dialog.showMessageBox(w, opts) : await dialog.showMessageBox(opts);
+      const title = tabs.list().find((x) => x.id === tabId)?.title;
+      const question = { icon: 'tab', title: t('이 탭을 닫을까요?'), detail: title || undefined, buttons: [{ label: t('닫기'), style: 'primary' }, { label: t('취소'), style: 'ghost' }], defaultId: 0, cancelId: 1, checkbox: t('다시 묻지 않기') };
+      let r;
+      if (ask) r = await ask(question);
+      else {
+        const w = getWindow();
+        const opts = { type: 'question', title: 'Nuri', message: question.title, detail: question.detail, buttons: question.buttons.map((b) => b.label), defaultId: 0, cancelId: 1, noLink: true, checkboxLabel: question.checkbox };
+        const s = w ? await dialog.showMessageBox(w, opts) : await dialog.showMessageBox(opts);
+        r = { response: s.response, checked: s.checkboxChecked };
+      }
       if (r.response !== 0) return;
-      if (r.checkboxChecked) settings.update({ 'general.confirmTabClose': false });
+      if (r.checked) settings.update({ 'general.confirmTabClose': false });
       tabs.close(tabId);
     } finally {
       askingClose = false;

@@ -55,6 +55,7 @@ const { GoogleLogin, continueTarget, profileDirFor } = require('./src/google-log
 const { GoogleBrowser } = require('./src/google-browser');
 const { cleanUploads } = require('./src/attachments');
 const { applyAutostart, startedByAutostart } = require('./src/autostart');
+const { createUiDialog } = require('./src/ui-dialog');
 
 const BUNDLED_BROWSER = path.join(config.ROOT, 'vendor', 'chrome-win64', 'chrome.exe');
 
@@ -354,7 +355,9 @@ async function start() {
     return lines.join('\n');
   }
 
-  registerIpc({ tabs, agent, server, ensureServer, settings, schedules, getWindow: () => win, engineInfo, ipc: router });
+  // Questions (quit, close tab) in Nuri's own dialog; the system one when the window is hidden.
+  const ask = createUiDialog({ getWindow: () => win, tabs });
+  registerIpc({ tabs, agent, server, ensureServer, settings, schedules, getWindow: () => win, engineInfo, ipc: router, ask });
 
   const shutdown = () => {
     schedules.stop();
@@ -411,6 +414,7 @@ async function start() {
   // X button: ask before quitting. While a task runs, the window can hide in the tray and the app
   // quits by itself when the task ends (reopening it from the tray cancels that).
   let quitting = false;
+  let askingQuit = false;
   let quitWhenIdle = false;
   app.on('before-quit', () => (quitting = true));
   const showWindow = () => {
@@ -480,11 +484,36 @@ async function start() {
     const action = settings.get('general.closeAction');
     if (action === 'tray') return hideToTray(false); // a running task just keeps going
     if (action === 'quit' && !busy) return app.quit();
-    const r = dialog.showMessageBoxSync(win, busy
-      ? { type: 'question', title: 'Nuri', message: t('작업이 진행 중입니다'), detail: t('지금 종료하면 진행 중인 작업이 중단됩니다. 트레이로 숨기면 작업을 끝까지 마친 뒤 종료합니다.'), buttons: [t('트레이로 숨기고 끝나면 종료'), t('지금 종료'), t('취소')], defaultId: 0, cancelId: 2, noLink: true }
-      : { type: 'question', title: 'Nuri', message: t('Nuri를 종료할까요?'), buttons: [t('종료'), t('트레이로 숨기기'), t('취소')], defaultId: 0, cancelId: 2, noLink: true });
-    if (busy ? r === 1 : r === 0) app.quit();
-    else if (r !== 2) hideToTray(busy);
+    if (askingQuit) return;
+    askingQuit = true;
+    const question = busy
+      ? {
+          icon: 'busy',
+          title: t('작업이 진행 중입니다'),
+          detail: t('지금 종료하면 진행 중인 작업이 중단됩니다. 트레이로 숨기면 작업을 끝까지 마친 뒤 종료합니다.'),
+          buttons: [{ label: t('트레이로 숨기고 끝나면 종료'), style: 'primary' }, { label: t('지금 종료'), style: 'danger' }, { label: t('취소'), style: 'ghost' }],
+          defaultId: 0,
+          cancelId: 2,
+        }
+      : {
+          icon: 'quit',
+          title: t('Nuri를 종료할까요?'),
+          detail: t('트레이로 숨기면 앱이 계속 실행되어 예약 작업이 정해진 시간에 실행됩니다'),
+          buttons: [{ label: t('종료'), style: 'primary' }, { label: t('트레이로 숨기기'), style: 'ghost' }, { label: t('취소'), style: 'ghost' }],
+          defaultId: 0,
+          cancelId: 2,
+          checkbox: t('다음부터 묻지 않고 이 선택대로 하기'),
+        };
+    ask(question)
+      .then(({ response: r, checked }) => {
+        if (r === 2) return;
+        // "Remember": 설정 > 일반 > 창 닫기(X) 버튼 follows this choice from now on.
+        if (!busy && checked) settings.update({ 'general.closeAction': r === 0 ? 'quit' : 'tray' });
+        if (busy ? r === 1 : r === 0) app.quit();
+        else hideToTray(busy);
+      })
+      .catch((err) => log('quit dialog failed', err.message))
+      .finally(() => (askingQuit = false));
   });
   agent.on('event', (ev) => {
     if (ev.kind === 'start' || ev.kind === 'end') updateTray();

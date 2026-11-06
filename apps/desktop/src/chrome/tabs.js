@@ -125,7 +125,7 @@ class ChromeTabs extends EventEmitter {
     await this.refresh();
     if (!this.activeId) await this.create(undefined, true);
     const entry = this.tabs.get(this.activeId);
-    if (!entry) throw new Error(t('Chrome 탭을 찾지 못했습니다'));
+    if (!entry) throw new Error(t('브라우저 탭을 찾지 못했습니다'));
     return { wc: entry.handle, page: entry.page };
   }
 
@@ -182,7 +182,7 @@ class ChromeTabs extends EventEmitter {
     entry.page.goto(normalizeInput(input, this.settings), { waitUntil: 'domcontentloaded' }).catch(() => {});
   }
 
-  /** Brings the Chrome window to the front (the "Chrome 창 보기" button). */
+  /** Brings the Chrome window to the front (the "브라우저 창 보기" button). */
   async show() {
     const { page } = await this.activePage();
     await page.bringToFront().catch(() => {});

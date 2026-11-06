@@ -1,6 +1,6 @@
 {
   "name": "nuri",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "private": true,
   "description": "Nuri: a desktop AI browser that does web and PC work for you, using your own AI subscriptions",

@@ -9,9 +9,11 @@
 
 [English](README.md) · **한국어**
 
+**🪟 Windows 버전** — Nuri 1.0은 **Windows 10, 11 (64비트)** 에서만 실행됩니다. macOS와 Linux는 아직 지원하지 않습니다.
+
 ![License: MIT](https://img.shields.io/badge/license-MIT-5b3fd9)
-![Platform: Windows](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-5b3fd9)
-![Electron](https://img.shields.io/badge/Electron-45-5b3fd9)
+![Platform: Windows only](https://img.shields.io/badge/platform-Windows%20only-5b3fd9)
+![Version](https://img.shields.io/badge/version-1.0.0-5b3fd9)
 ![Languages](https://img.shields.io/badge/UI-English%20%7C%20%ED%95%9C%EA%B5%AD%EC%96%B4-5b3fd9)
 
 <img src="docs/screenshots/task-ko.png" alt="Nuri가 작업을 실행하는 화면" width="100%" />
@@ -52,7 +54,9 @@
 
 ## 시작하기 (Windows)
 
-**준비물:** Windows 10 또는 11, [Node.js](https://nodejs.org) 22 이상, 그리고 구독 계정으로 로그인한 AI CLI 하나 이상:
+이 저장소는 Windows 버전입니다. 앱, 컴퓨터 제어 도우미, 설치 파일 모두 Windows 전용으로 만들어집니다.
+
+**준비물:** Windows 10 또는 11 (64비트), [Node.js](https://nodejs.org) 22 이상, 그리고 구독 계정으로 로그인한 AI CLI 하나 이상:
 
 | 모델 | CLI | 로그인 |
 |---|---|---|
@@ -63,7 +67,7 @@
 CLI는 Windows에 설치하거나 WSL2(Ubuntu) 안에 설치해도 됩니다. 모두 Windows에 있으면 Windows에서, 아니면 WSL에서 실행합니다.
 
 ```bash
-# 1. 데스크톱 앱 의존성 (Windows용 npm 사용: Electron이 Windows용이어야 합니다)
+# 1. 데스크톱 앱 의존성 (WSL이 아닌 Windows의 npm으로 설치)
 cd apps/desktop
 npm install
 
@@ -88,7 +92,7 @@ npm start
 ## 동작 방식
 
 ```text
-┌──────────────────────── Nuri (Electron) ────────────────────────┐
+┌──────────────────────── Nuri desktop app ───────────────────────┐
 │  화면 (사이드바 · 탭 · 에이전트 패널)                             │
 │  에이전트 ── Playwright (CDP, 127.0.0.1) ──▶ 내장 Chromium        │
 │      │    └─ 데스크톱 도우미 (UI Automation) ──▶ Windows 프로그램  │
@@ -111,7 +115,7 @@ npm start
 ## 폴더 구조
 
 ```text
-apps/desktop/          Electron 앱: 화면, 에이전트, 브라우저·데스크톱 자동화, 예약
+apps/desktop/          데스크톱 앱: 화면, 에이전트, 브라우저·데스크톱 자동화, 예약
   src/agent/           브라우저 에이전트 (프롬프트, 판단, 하위 에이전트, 도구)
   src/automation/      Playwright 연결, 페이지 스냅샷, 행동, 스크립트
   src/desktop/         컴퓨터 제어 (Windows 도우미, 백그라운드 세션)

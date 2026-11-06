@@ -92,10 +92,10 @@
             <div class="chrome-logo">
               <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="3.6"/><path d="M12 8.4h8.6M8.9 13.8 4.6 6.3M15.1 13.8l-4.3 7.6"/></svg>
             </div>
-            <h3 id="chromeTitle">브라우저는 Chrome 창에서 열립니다</h3>
-            <p>AI 자동화는 PC에 설치된 진짜 <span id="chromeName">Chrome</span>을 전용 창으로 열어 사용합니다. Google 로그인도 그 창에서 그대로 됩니다. 한 번 로그인하면 계속 유지됩니다.</p>
-            <p class="chrome-sub">위 주소창과 탭은 그 Chrome 창을 조작합니다. 평소 쓰는 Chrome과는 따로 분리된 프로필입니다.</p>
-            <button class="btn-primary" id="chromeShow">Chrome 창 보기</button>
+            <h3 id="chromeTitle">브라우저는 별도 창에서 열립니다</h3>
+            <p>AI 자동화는 전용 브라우저 창을 열어 사용합니다. Google 로그인도 그 창에서 그대로 됩니다. 한 번 로그인하면 계속 유지됩니다.<span id="chromeName" hidden></span></p>
+            <p class="chrome-sub">위 주소창과 탭은 그 창을 조작합니다. 평소 쓰는 브라우저와는 따로 분리된 프로필입니다.</p>
+            <button class="btn-primary" id="chromeShow">브라우저 창 보기</button>
           </div>
         </div>
       </div>
@@ -209,6 +209,7 @@
       </div>
     </section>
   </div>
+  <dialog class="app-dialog" id="appDialog" aria-labelledby="appDialogTitle"></dialog>
   <dialog class="sch-dialog" id="scheduleDialog">
     <div class="sch-title" id="schTitle">작업 예약</div>
     <label class="sch-field">작업
@@ -290,6 +291,7 @@
   <script src="js/composer.js"></script>
   <script src="js/accounts.js"></script>
   <script src="js/settings.js"></script>
+  <script src="js/dialogs.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

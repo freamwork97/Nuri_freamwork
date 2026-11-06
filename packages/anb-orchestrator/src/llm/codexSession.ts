@@ -5,6 +5,7 @@
  * read-only, never ask for approval, and are rotated after MAX_TURNS to bound context size.
  */
 
+import { VERSION } from '../version.js';
 import type { ChildProcess } from 'node:child_process';
 import fs from 'node:fs';
 import { CODEX_SUBSCRIPTION_FLAG, SANDBOX_DIR, safeEnv, type ImageInput, spawnCli } from './process.js';
@@ -33,7 +34,7 @@ class AppServer {
     this.child.stderr!.on('data', (d) => (this.stderr = (this.stderr + d).slice(-2000)));
     this.child.on('close', (code) => this.fail(new Error(`codex app-server exited (${code}): ${this.stderr.slice(-300)}`)));
     this.child.on('error', (e) => this.fail(e));
-    this.ready = this.request('initialize', { clientInfo: { name: 'nuri', version: '2' } }).then(() => {
+    this.ready = this.request('initialize', { clientInfo: { name: 'nuri', version: VERSION } }).then(() => {
       this.notify('initialized');
     });
   }
